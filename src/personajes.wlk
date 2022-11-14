@@ -3,7 +3,8 @@ import mapa.*
 import juego.*
 
 class Jugador {
-	
+	const velocidadAnimacion = 60
+	const velocidadTeletransportacion = 250
 	var property position
 	const property rival
 	var  property mirandoHacia  
@@ -11,12 +12,10 @@ class Jugador {
 	
 
 	
-	method subir() {
-		self.mover(position.up(1))
-	}
-	method bajar() {self.mover(position.down(1))}
-	method izquierda() {self.mover(position.left(1))}
-	method derecha() {self.mover(position.right(1))}
+	method subir() {self.mover(arriba.mover(position))}
+	method bajar() {self.mover(abajo.mover(position))}
+	method irIzquierda() {self.mover(izquierda.mover(position))}
+	method irDerecha() {self.mover(derecha.mover(position))}
 	
 	
 	method mover(posicion){
@@ -44,6 +43,8 @@ class Jugador {
 		objeto.esColisionado()
 	}
 	
+	method inicio()
+	
 }
 
 object azul inherits Jugador (position = game.at(8,8), rival = rojo, mirandoHacia = "assets/azulDerecha.png") {
@@ -51,64 +52,64 @@ object azul inherits Jugador (position = game.at(8,8), rival = rojo, mirandoHaci
 	override method control(){
 		keyboard.up().onPressDo({self.subir()})
 		keyboard.down().onPressDo({self.bajar()})
-		keyboard.left().onPressDo({self.izquierda()})
-		keyboard.right().onPressDo({self.derecha()})
+		keyboard.left().onPressDo({self.irIzquierda()})
+		keyboard.right().onPressDo({self.irDerecha()})
 	 }
 	 
 	override method mirarAbajo(){
-	   game.schedule(250,{=> mirandoHacia = "assets/azulAbajo.png" })
+	   game.schedule(velocidadTeletransportacion,{=> mirandoHacia = "assets/azulAbajo.png" })
 	 }
 	 
 	override method mirarArriba(){
-	   game.schedule(250,{=> mirandoHacia = "assets/azulArriba.png" })
+	   game.schedule(velocidadTeletransportacion,{=> mirandoHacia = "assets/azulArriba.png" })
 	 }
 	 
 	 override method mirarDerecha(){
-	   game.schedule(250,{=> mirandoHacia = "assets/azulDerecha.png" })
+	   game.schedule(velocidadTeletransportacion,{=> mirandoHacia = "assets/azulDerecha.png" })
 	 }
 	 
 	  override method mirarIzquierda(){
-	   game.schedule(250,{=> mirandoHacia = "assets/azulIzquierda.png" })
+	   game.schedule(velocidadTeletransportacion,{=> mirandoHacia = "assets/azulIzquierda.png" })
 	 }
 	 
 	 
 	 override method mirandoHaciaArriba() {
-	 	game.schedule(150,{=> mirandoHacia = "assets/azulArriba.png" })
+	 	game.schedule(velocidadAnimacion,{=> mirandoHacia = "assets/azulArriba.png" })
 	 }
 	 
 	  override method mirandoHaciaAbajo() {
-	 	game.schedule(150,{=> mirandoHacia = "assets/azulAbajo.png" })
+	 	game.schedule(velocidadAnimacion,{=> mirandoHacia = "assets/azulAbajo.png" })
 	 }
 	 
 	  override method mirandoHaciaDerecha() {
-	 	game.schedule(150,{=> mirandoHacia = "assets/azulDerecha.png" })
+	 	game.schedule(velocidadAnimacion,{=> mirandoHacia = "assets/azulDerecha.png" })
 	 }
 	 
 	  override method mirandoHaciaIzquierda() {
-	 	game.schedule(150,{=> mirandoHacia = "assets/azulIzquierda.png" })
+	 	game.schedule(velocidadAnimacion,{=> mirandoHacia = "assets/azulIzquierda.png" })
 	 }
 	 
 	 override method subir(){
 	 	mirandoHacia = "assets/caminandoArribaAzul.png"
-	 	game.schedule(150,{ => mirandoHacia = "assets/caminandoArribaAzul2.png" self.mirandoHaciaArriba()})
+	 	game.schedule(velocidadAnimacion,{ => mirandoHacia = "assets/caminandoArribaAzul2.png" self.mirandoHaciaArriba()})
 	 	super()
 	 }
 	 
 	  override method bajar(){
 	 	mirandoHacia = "assets/caminandoAbajoAzul.png"
-	 	game.schedule(150,{ => mirandoHacia = "assets/caminandoAbajoazul2.png" self.mirandoHaciaAbajo()})
+	 	game.schedule(velocidadAnimacion,{ => mirandoHacia = "assets/caminandoAbajoazul2.png" self.mirandoHaciaAbajo()})
 	 	super()
 	 }
 	 
-	 override method derecha(){
+	 override method irDerecha(){
 	 	mirandoHacia = "assets/caminandoDerechaAzul.png"
-	 	game.schedule(150,{ => self.mirandoHaciaDerecha()})
+	 	game.schedule(velocidadAnimacion,{ => self.mirandoHaciaDerecha()})
 	 	super()
 	 }
 	 
-	  override method izquierda(){
+	  override method irIzquierda(){
 	 	mirandoHacia = "assets/caminandoIzquierdaAzul.png"
-	 	game.schedule(150,{ => self.mirandoHaciaIzquierda()})
+	 	game.schedule(velocidadAnimacion,{ => self.mirandoHaciaIzquierda()})
 	 	super()
 	 }
 	 
@@ -124,6 +125,11 @@ object azul inherits Jugador (position = game.at(8,8), rival = rojo, mirandoHaci
 	 	}
 	 }
 	 
+	 override method inicio(){
+	 	position = game.at(8,8)
+	 	self.mirarDerecha()
+	 }
+	 
 }
 
 object rojo inherits Jugador (position = game.at(7,11), rival = azul, mirandoHacia = "assets/rojoIzquierda.png") {
@@ -133,8 +139,8 @@ object rojo inherits Jugador (position = game.at(7,11), rival = azul, mirandoHac
 	override method control(){
 		keyboard.w().onPressDo({self.subir()})
 		keyboard.s().onPressDo({self.bajar()})
-		keyboard.a().onPressDo({self.izquierda()})
-		keyboard.d().onPressDo({self.derecha()})
+		keyboard.a().onPressDo({self.irIzquierda()})
+		keyboard.d().onPressDo({self.irDerecha()})
 	 }
 	 
 	 override method colision(objeto){
@@ -144,64 +150,96 @@ object rojo inherits Jugador (position = game.at(7,11), rival = azul, mirandoHac
 	 }
 	 
 	 override method mirarAbajo(){
-	   game.schedule(250,{=> mirandoHacia = "assets/rojoAbajo.png" })
+	   game.schedule(velocidadTeletransportacion,{=> mirandoHacia = "assets/rojoAbajo.png" })
 	 }
 	 
 	override method mirarArriba(){
-	   game.schedule(250,{=> mirandoHacia = "assets/rojoArriba.png" })
+	   game.schedule(velocidadTeletransportacion,{=> mirandoHacia = "assets/rojoArriba.png" })
 	 }
 	 
 	 override method mirarDerecha(){
-	   game.schedule(250,{=> mirandoHacia = "assets/rojoDerecha.png" })
+	   game.schedule(velocidadTeletransportacion,{=> mirandoHacia = "assets/rojoDerecha.png" })
 	 }
 	 
 	  override method mirarIzquierda(){
-	   game.schedule(250,{=> mirandoHacia = "assets/rojoIzquierda.png" })
+	   game.schedule(velocidadTeletransportacion,{=> mirandoHacia = "assets/rojoIzquierda.png" })
 	 }
 	 
 	 
 	 override method mirandoHaciaArriba() {
-	 	game.schedule(150,{=> mirandoHacia = "assets/rojoArriba.png" })
+	 	game.schedule(velocidadAnimacion,{=> mirandoHacia = "assets/rojoArriba.png" })
 	 }
 	 
 	  override method mirandoHaciaAbajo() {
-	 	game.schedule(150,{=> mirandoHacia = "assets/rojoAbajo.png" })
+	 	game.schedule(velocidadAnimacion,{=> mirandoHacia = "assets/rojoAbajo.png" })
 	 }
 	 
 	  override method mirandoHaciaDerecha() {
-	 	game.schedule(150,{=> mirandoHacia = "assets/rojoDerecha.png" })
+	 	game.schedule(velocidadAnimacion,{=> mirandoHacia = "assets/rojoDerecha.png" })
 	 }
 	 
 	  override method mirandoHaciaIzquierda() {
-	 	game.schedule(150,{=> mirandoHacia = "assets/rojoIzquierda.png" })
+	 	game.schedule(velocidadAnimacion,{=> mirandoHacia = "assets/rojoIzquierda.png" })
 	 }
 	 
 	 override method subir(){
 	 	mirandoHacia = "assets/caminandoArribaRojo.png"
-	 	game.schedule(150,{ => mirandoHacia = "assets/caminandoArribaRojo2.png" self.mirandoHaciaArriba()})
+	 	game.schedule(velocidadAnimacion,{ => mirandoHacia = "assets/caminandoArribaRojo2.png" self.mirandoHaciaArriba()})
 	 	super()
 	 }
 	 
 	  override method bajar(){
 	 	mirandoHacia = "assets/caminandoAbajoRojo.png"
-	 	game.schedule(150,{ => mirandoHacia = "assets/caminandoAbajoRojo2.png" self.mirandoHaciaAbajo()})
+	 	game.schedule(velocidadAnimacion,{ => mirandoHacia = "assets/caminandoAbajoRojo2.png" self.mirandoHaciaAbajo()})
 	 	super()
 	 }
 	 
-	 override method derecha(){
+	 override method irDerecha(){
 	 	mirandoHacia = "assets/caminandoDerechaRojo.png"
-	 	game.schedule(150,{ => self.mirandoHaciaDerecha()})
+	 	game.schedule(velocidadAnimacion,{ => self.mirandoHaciaDerecha()})
 	 	super()
 	 }
 	 
-	  override method izquierda(){
+	  override method irIzquierda(){
 	 	mirandoHacia = "assets/caminandoIzquierdaRojo.png"
-	 	game.schedule(150,{ => self.mirandoHaciaIzquierda()})
+	 	game.schedule(velocidadAnimacion,{ => self.mirandoHaciaIzquierda()})
 	 	super()
+	 }	 
+	 
+	  override method inicio(){
+	 	position = game.at(7,11)
+	 	self.mirarIzquierda()
 	 }
-	 
-	 
-	 
 }
 
+class Esfera{
+	var property position
+	const jugadores = [azul,rojo]
+	const posiciones = [arriba, abajo, izquierda, derecha]
+	
+	method image() = "assets/esfera.png"
+	
+	method esColisionado(objeto){
+		objeto.inicio()
+	}
+	
+	method tieneJugadoresCercanos(){
+		return jugadores.filter{jugador => self.estaCerca(jugador)}
+	}
+	
+	method estaCerca(unJugador){
+		return self.posicionJugador(unJugador) < 3
+	}
+	
+	method posicionJugador(unJugador){
+		return self.position().distance(unJugador.position())
+	}
+	
+	
 
+	
+	method mover(posicion){
+		position = posicion
+	}
+	
+}
