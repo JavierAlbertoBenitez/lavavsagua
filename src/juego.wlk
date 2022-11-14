@@ -4,7 +4,7 @@ import personajes.*
 
 
 object juego{
-	const property esferita = new Esfera(position = game.at(4,5))
+
 	method iniciar(){
 		self.crear()
 		self.mapear()
@@ -26,18 +26,19 @@ object juego{
 		mapa.casillas()
 		mapa.posicionesProhibidas()
 		puertas.crear()
+		esferas.crear()
+		esferas.mover()
 	}
 	
 	method visuales(){
 		
 		puertas.puertas().forEach{puerta => game.addVisual(puerta)}
+		esferas.esferas().forEach{esfera => game.addVisual(esfera)}
 		game.addVisual(azul)
 		game.addVisual(rojo)
 		game.addVisual(puntosAzul)
 		game.addVisual(puntosRojo)
 		game.addVisual(reloj)
-		game.addVisual(esferita)
-		game.whenCollideDo(esferita, {elemento => esferita.esColisionado(elemento)})
 	}
 	
 	method jugar(){

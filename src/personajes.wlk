@@ -215,7 +215,9 @@ object rojo inherits Jugador (position = game.at(7,11), rival = azul, mirandoHac
 class Esfera{
 	var property position
 	const jugadores = [azul,rojo]
-	const posiciones = [arriba, abajo, izquierda, derecha]
+	const property direcciones = [arriba, abajo, izquierda, derecha]
+	const direccionesProhibidas = [game.at(6,11),game.at(9,8), game.at(14,16), game.at(13,6), game.at(1,3), game.at(2,13)]
+	
 	
 	method image() = "assets/esfera.png"
 	
@@ -228,18 +230,75 @@ class Esfera{
 	}
 	
 	method estaCerca(unJugador){
-		return self.posicionJugador(unJugador) < 3
+		return position.distance(unJugador.position()) < 3
 	}
 	
-	method posicionJugador(unJugador){
-		return self.position().distance(unJugador.position())
+	method mejorDireccion(unJugador){
+		return direcciones.min{direccion => direccion.mover(position).distance(unJugador.position())}
 	}
 	
+	method moverHaciaJugador(){
+		var unJugador = self.tieneJugadoresCercanos().anyOne()
+		if (self.estaCerca(unJugador) and self.mejorDireccionPermitida(unJugador)) {
+		 	self.mover(self.mejorDireccion(unJugador))
+		} else {
+			self.mover(direcciones.anyOne())
+		}
+	}
 	
 
+	method mejorDireccionPermitida(unJugador){
+		return self.puedeMoverse(self.mejorDireccion(unJugador).mover(position))
+	}
 	
-	method mover(posicion){
-		position = posicion
+	method puedeMoverse(posicion){
+		return (!mapa.posProhibidas().contains(posicion) and !direccionesProhibidas.contains(posicion)) 
+	}
+	
+	method moverHacia(){
+		if(!self.tieneJugadoresCercanos().isEmpty()){
+			self.moverHaciaJugador()
+		} else{
+			self.mover(direcciones.anyOne())
+		}
+	}
+
+	method mover(direccion){
+		var nuevaPos = direccion.mover(position) 
+		if(self.puedeMoverse(nuevaPos)){
+		  position = nuevaPos
+		  }  else {
+		  	self.mover(direcciones.anyOne())
+		  }
+	}	
+	
+	method realizarMovimiento(){
+		game.onTick(200,"correr",{self.moverHacia()})
+	}
+}
+
+object esferas{
+	var property esferas = []
+	
+	method crear(){
+		esferas.add(new Esfera(position = game.at(10,16)))
+		esferas.add(new Esfera(position = game.at(11,15)))
+		esferas.add(new Esfera(position = game.at(12,12)))
+		esferas.add(new Esfera(position = game.at(13,11)))
+		esferas.add(new Esfera(position = game.at(5,3)))
+		esferas.add(new Esfera(position = game.at(4,4)))
+		esferas.add(new Esfera(position = game.at(2,8)))
+		esferas.add(new Esfera(position = game.at(3,7)))
+	}
+	
+	method mover(){
+		esferas.forEach{esfera => esfera.realizarMovimiento()}
+	}
+	
+	method posicionOtraEsfera(esfera){
+		var auxiliar = esferas.copyWithout(self)
+		var posiciones = auxiliar.map{auxiliar => auxiliar.position()}
+		return !posiciones.contains(esfera.position())
 	}
 	
 }
