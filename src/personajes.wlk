@@ -55,6 +55,8 @@ class Jugador{
 		position = posicion
 		game.schedule(100,{imagen = puerta.mirar().cambiar(self)})
 	}
+	
+	method inicio()
 }
 
 object azul inherits Jugador(position = game.at(8,8), imagen = imagenAzul.derecha(), tipoImagen = imagenAzul, rival = rojo){
@@ -70,6 +72,11 @@ object azul inherits Jugador(position = game.at(8,8), imagen = imagenAzul.derech
 			super(objeto)
 		}
 	}
+	
+	override method inicio(){
+		position = game.at(8,8)
+		game.schedule(100,{=> imagen = imagenAzul.derecha()})
+	}
 }
 
 object rojo inherits Jugador(position = game.at(7,11), imagen = imagenRojo.izquierda(), tipoImagen = imagenRojo, rival = azul){
@@ -84,5 +91,10 @@ object rojo inherits Jugador(position = game.at(7,11), imagen = imagenRojo.izqui
 		if (mapa.casillasRojas().contains(objeto)){
 			super(objeto)
 		}
+	}
+	
+	override method inicio(){
+		position = game.at(7,11)
+		game.schedule(100,{=> imagen = imagenRojo.izquierda()})
 	}
 }

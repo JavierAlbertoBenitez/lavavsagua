@@ -7,8 +7,7 @@ import esferas.*
 
 
 object juego{
- const jugadores = [azul, rojo]
- 
+ const property jugadores = [azul, rojo]
 	method iniciar(){
 		self.crear()
 		self.mapear()
@@ -29,12 +28,14 @@ object juego{
 	method mapear(){
 		mapa.casillas()
 		puertas.crear()
+		esferas.crear()
 		mapa.posicionesPermitidas()
 	}
 	
 	method visuales(){
 		
 		puertas.puertas().forEach{puerta => game.addVisual(puerta)}
+		esferas.esferas().forEach{esfera => game.addVisual(esfera)}
 		game.addVisual(puntosAzul)
 		game.addVisual(puntosRojo)
 		game.addVisual(azul)
@@ -46,10 +47,12 @@ object juego{
 		reloj.iniciar()
 		azul.control()
 		rojo.control()
+		game.onTick(2100,"mover",{esferas.mover()})
 	}
 	
 	method colisiones(){
 		puertas.puertas().forEach{puerta => game.whenCollideDo(puerta, {elemento => puerta.esColisionado(elemento)})}
+		esferas.esferas().forEach{esfera => game.whenCollideDo(esfera,{elemento => esfera.esColisionado(elemento)})}
 		jugadores.forEach{jugador => game.whenCollideDo(jugador, {elemento => jugador.esColisionado(elemento)})}
 	}
 }
