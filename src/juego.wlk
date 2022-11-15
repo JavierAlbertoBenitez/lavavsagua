@@ -7,7 +7,8 @@ import esferas.*
 
 
 object juego{
-
+ const jugadores = [azul, rojo]
+ 
 	method iniciar(){
 		self.crear()
 		self.mapear()
@@ -18,7 +19,7 @@ object juego{
 	}
 	
 	method crear(){
-		game.title('Pac man')
+		game.title('Agua vs Lava')
 		game.width(16)
 		game.height(19)
 		game.boardGround("assets/fondo.png")
@@ -34,23 +35,22 @@ object juego{
 	method visuales(){
 		
 		puertas.puertas().forEach{puerta => game.addVisual(puerta)}
-		game.addVisual(azul)
-		game.addVisual(rojo)
 		game.addVisual(puntosAzul)
 		game.addVisual(puntosRojo)
+		game.addVisual(azul)
+		game.addVisual(rojo)
 		game.addVisual(reloj)
 	}
 	
 	method jugar(){
+		reloj.iniciar()
 		azul.control()
 		rojo.control()
-		reloj.iniciar()
 	}
 	
 	method colisiones(){
-		game.whenCollideDo(azul, {elemento => azul.colision(elemento)})
-		game.whenCollideDo(rojo, {elemento => rojo.colision(elemento)})
 		puertas.puertas().forEach{puerta => game.whenCollideDo(puerta, {elemento => puerta.esColisionado(elemento)})}
+		jugadores.forEach{jugador => game.whenCollideDo(jugador, {elemento => jugador.esColisionado(elemento)})}
 	}
 }
 

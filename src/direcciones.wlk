@@ -2,27 +2,20 @@ import wollok.game.*
 import personajes.*
 
 object imgAbajo{
-	method cambiar(jugador){
-		jugador.mirarAbajo()
-	}
+	method cambiar(jugador)= jugador.tipoImagen().abajo()
 }
 
 object imgArriba{
-	method cambiar(jugador){
-		jugador.mirarArriba()
-	}
+	method cambiar(jugador)= jugador.tipoImagen().arriba()
 }
 
 object imgIzquierda{
-	method cambiar(jugador){
-		jugador.mirarIzquierda()
-	}
+	method cambiar(jugador) = jugador.tipoImagen().izquierda()
 }
 
 object imgDerecha{
-	method cambiar(jugador){
-		jugador.mirarDerecha()
-	}
+	method cambiar(jugador) = jugador.tipoImagen().derecha()
+
 }
 
 object arriba{
