@@ -1,6 +1,9 @@
 import wollok.game.*
+import casillas.*
 import mapa.*
 import personajes.*
+import contadores.*
+import esferas.*
 
 
 object juego{
@@ -24,16 +27,13 @@ object juego{
 	
 	method mapear(){
 		mapa.casillas()
-		mapa.posicionesProhibidas()
 		puertas.crear()
-		esferas.crear()
-		esferas.mover()
+		mapa.posicionesPermitidas()
 	}
 	
 	method visuales(){
 		
 		puertas.puertas().forEach{puerta => game.addVisual(puerta)}
-		esferas.esferas().forEach{esfera => game.addVisual(esfera)}
 		game.addVisual(azul)
 		game.addVisual(rojo)
 		game.addVisual(puntosAzul)
