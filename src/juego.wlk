@@ -9,6 +9,7 @@ import pantalla.*
 
 object juego{
  const property jugadores = [azul, rojo]
+ const sonido =  game.sound("assets/musica.mp3")
  var juegoIniciado = false
 	method iniciar(){
 		self.crear()
@@ -33,6 +34,8 @@ object juego{
 		game.height(19)
 		game.boardGround("assets/fondo.png")
 		game.cellSize(50)	
+		game.schedule(1,{sonido.play()})
+		sonido.shouldLoop(true)
 	   }
 	  
 	method ayuda(){
