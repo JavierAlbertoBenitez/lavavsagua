@@ -56,9 +56,8 @@ object reloj{
 	
 	method tiempoFinal(){
 		if (min == 2) {
-			pantalla.cambiarImagen("assets/ayuda.png")
-			/*game.addVisual(pantalla)*/
-			juego.eliminar()
+			pantalla.cambiarImagen("assets/derrota.png")
+			game.addVisual(pantalla)
 		}
 	}
 }

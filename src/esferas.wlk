@@ -74,11 +74,15 @@ object esferas{
 		return self.esferasSinElla(esfera).map{otraEsfera => otraEsfera.position()}
 	}
 	
+	method estaLejos(posicion,otraPosicion){
+		return posicion.distance(otraPosicion) > 1
+	}
+	
 	method posicionesOtrasEsferas(esfera,posicion){
-		return !self.otrasPosiciones(esfera).contains(posicion)
+		return self.otrasPosiciones(esfera).all{otraPosicion => self.estaLejos(posicion,otraPosicion)}
 	}
 	
 	method posicionesPermitidasEsferas(){
-		posPermitidasEsferas.addAll(mapa.casillasTotales().map{casilla => casilla.position()})
+		posPermitidasEsferas.addAll(mapa.casTotales().map{casilla => casilla.position()})
 	}
 }

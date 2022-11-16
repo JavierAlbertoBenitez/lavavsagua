@@ -4,13 +4,15 @@ import direcciones.*
 
 class Casilla{
 	const property position
+
+	
 	
 	method image() 
 	
 	method esColisionado(){
 		game.removeVisual(self)
 	}
-	
+
 	method inicio(){}
 }
 
@@ -19,6 +21,7 @@ class CasillaRoja inherits Casilla{
 	
 	override method  esColisionado(){
 		mapa.casillasRojas().remove(self)
+		mapa.estaVacioRojas()
 		super()
 	}
 }
@@ -28,7 +31,9 @@ class CasillaAzul inherits Casilla{
 	
 	override method  esColisionado(){
 		mapa.casillasAzules().remove(self)
+		mapa.estaVacioAzules()
 		super()
+		
 	}
 }
 

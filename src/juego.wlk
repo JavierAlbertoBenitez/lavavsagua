@@ -9,7 +9,7 @@ import pantalla.*
 
 object juego{
  const property jugadores = [azul, rojo]
- const property juegosIniciado = false
+ var juegoIniciado = false
 	method iniciar(){
 		self.crear()
 		self.mapear()
@@ -50,34 +50,30 @@ object juego{
 	}
 	
 	method empezar(){
+		if(!juegoIniciado) {
 		game.removeVisual(pantalla)
 		self.visuales()
 		self.jugar()
+		juegoIniciado = true
 		self.colisiones()
-	}
-	
-	
+	   }
+	 }
+	 	
 	method jugar(){
         reloj.iniciar()
 		azul.control()
 		rojo.control()
-		game.onTick(1000,"mover",{esferas.mover()})
+		game.onTick(500,"mover",{esferas.mover()})
 	}
 	
 	method colisiones(){
-		puertas.puertas().forEach{puerta => game.whenCollideDo(puerta, {elemento => puerta.esColisionado(elemento)})}
-		esferas.esferas().forEach{esfera => game.whenCollideDo(esfera,{elemento => esfera.esColisionado(elemento)})}
-		jugadores.forEach{jugador => game.whenCollideDo(jugador, {elemento => jugador.esColisionado(elemento)})}
+		 puertas.puertas().forEach{puerta => game.whenCollideDo(puerta, {elemento => puerta.esColisionado(elemento)})}
+		 esferas.esferas().forEach{esfera => game.whenCollideDo(esfera,{elemento => esfera.esColisionado(elemento)})}
+		 jugadores.forEach{jugador => game.whenCollideDo(jugador, {elemento => jugador.esColisionado(elemento)})}
 	}
 	
-	method eliminar(){
-		puertas.puertas().forEach{puerta => game.removeVisual(puerta)}
-		mapa.casillasTotales().forEach{casilla => game.removeVisual(casilla)}
-		jugadores.forEach{jugador => game.removeVisual(jugador)}
-		esferas.esferas().forEach{esfera => game.removeVisual(esfera)}
-		game.removeVisual(reloj)
-		game.removeVisual(puntosAzul)
-		game.removeVisual(puntosRojo)
-	}
+	
+	
+	
 }
 

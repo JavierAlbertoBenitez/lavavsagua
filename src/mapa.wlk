@@ -1,11 +1,13 @@
 import wollok.game.*
 import casillas.*
+import pantalla.*
 
 
 
 object mapa {
 	var property casillasAzules = []
 	var property casillasRojas  = []
+	var property casTotales = []
 	var property posPermitidas = [game.at(9,8),game.at(6,11),game.at(8,8),game.at(7,11)]
 	
 	method spawnCasillasAzules(){
@@ -85,23 +87,40 @@ object mapa {
 	 }
      
      method casillasTotales(){
-     	return casillasAzules + casillasRojas
+     	casTotales.addAll(casillasRojas)
+     	casTotales.addAll(casillasAzules)
      }
-     
+   
      method casillas(){
      	self.spawnCasillasAzules()
      	self.spawnCasillasRojas()
-     	self.casillasTotales().forEach{casilla => game.addVisual(casilla)}
+        self.casillasTotales()
+     	self.casTotales().forEach{casilla => game.addVisual(casilla)}
      }
      
+  
      method posicionesPermitidas(){
      	var posiciones = []
      	var posicionesCasillas
      	var posicionesPuertas
-     	posicionesCasillas = self.casillasTotales().map{casilla => casilla.position()}
+     	posicionesCasillas = self.casTotales().map{casilla => casilla.position()}
      	posicionesPuertas = puertas.puertas().map{puerta => puerta.position()} +  puertas.puertas().map{puerta => puerta.puntoCercano()}
      	posiciones = posicionesCasillas + posicionesPuertas
      	posPermitidas.addAll(posiciones) 
+     }
+     
+     method estaVacioRojas(){
+     	if(casillasRojas.isEmpty()){
+     	   pantalla.cambiarImagen("assets/victoriaLava.png")
+     	   game.addVisual(pantalla)
+     	}
+     }
+     
+      method estaVacioAzules(){
+     	if(casillasAzules.isEmpty()){
+     	pantalla.cambiarImagen("assets/victoriaAgua.png")
+     	game.addVisual(pantalla)
+     	}
      }
 }
 
