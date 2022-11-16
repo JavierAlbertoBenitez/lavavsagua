@@ -9,9 +9,8 @@ class Esfera{
 	var property position
 	const direcciones = [arriba, abajo, derecha, izquierda] 
 	
-	method image() = "assets/esfera.png"
 	
-	method posProhibidas () = [game.at(9,8),game.at(6,11)] + puertas.puertas().map{puerta => puerta.puntoCercano()}
+	method image() = "assets/esfera.png"
 	
 	method esColisionado(objeto){
 		objeto.inicio()
@@ -19,13 +18,14 @@ class Esfera{
 	
 	method estaCerca (jugador) = self.position().distance(jugador.position()) < 5
 	
-	method mejorDireccion(jugador) = direcciones.min{direccion => direccion.mover(position).distance(jugador.position()) }
+	method mejorDireccion(jugador) {
+		 return (direcciones.min{direccion => (direccion.mover(position)).distance(jugador.position())})
+	}
 	
 	method moverHaciaJugador(){
-		var jugador
-		jugador = juego.jugadores().filter{jugado =>self.estaCerca(self)}.anyOne()
-		if(self.sePuedeMover((self.mejorDireccion(jugador)).mover(position))){
-			self.mover(self.mejorDireccion(jugador))
+		var jugador = juego.jugadores().filter{jugador =>self.estaCerca(jugador)}.anyOne()
+		if (self.sePuedeMover(self.mejorDireccion(jugador).mover(position))) {
+			position = self.mejorDireccion(jugador).mover(position)
 		} else {
 			self.mover(direcciones.anyOne())
 		}
@@ -39,22 +39,20 @@ class Esfera{
 		}
 	}
 	
-	method sePuedeMover(posicion) = mapa.posPermitidas().contains(posicion) and !self.posProhibidas().contains(posicion) and esferas.posicionOtraEsfera(self)
+	method sePuedeMover(posicion) = esferas.posPermitidasEsferas().contains(posicion) and esferas.posicionesOtrasEsferas(self,posicion)
 	
 	method mover(direccion){
 		if (self.sePuedeMover(direccion.mover(position))) {
 			position = direccion.mover(position)
-		}
-	}	
-	
-	method inicio(){}
+		} 
+	}
 }
 
 object esferas{
 	var property esferas = []
+	var property posPermitidasEsferas =  []
 	
 	method crear(){
-		esferas.add(new Esfera(position = game.at(10,16)))
 		esferas.add(new Esfera(position = game.at(11,15)))
 		esferas.add(new Esfera(position = game.at(12,12)))
 		esferas.add(new Esfera(position = game.at(13,11)))
@@ -68,11 +66,19 @@ object esferas{
 		esferas.forEach{esfera => esfera.moverHacia()}
 	}
 	
-	method posicionOtraEsfera(esfera){
-		var auxiliar 
-		var posiciones 
-		auxiliar = esferas.copyWithout(esfera)
-		posiciones = auxiliar.map{auxiliar => auxiliar.position()}
-		return !posiciones.contains(esfera.position())
+	method esferasSinElla(esfera){
+		return esferas.copyWithout(esfera)
+	}
+	
+	method otrasPosiciones(esfera){
+		return self.esferasSinElla(esfera).map{otraEsfera => otraEsfera.position()}
+	}
+	
+	method posicionesOtrasEsferas(esfera,posicion){
+		return !self.otrasPosiciones(esfera).contains(posicion)
+	}
+	
+	method posicionesPermitidasEsferas(){
+		posPermitidasEsferas.addAll(mapa.casillasTotales().map{casilla => casilla.position()})
 	}
 }

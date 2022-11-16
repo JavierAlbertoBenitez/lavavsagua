@@ -1,5 +1,7 @@
 import wollok.game.*
 import mapa.*
+import pantalla.*
+import juego.*
 
 object puntosAzul{
 	const property position = game.at(2,18)
@@ -48,6 +50,15 @@ object reloj{
 		} else {
 			seg = 0
 			min += 1
+			self.tiempoFinal()
+		}
+	}
+	
+	method tiempoFinal(){
+		if (min == 2) {
+			pantalla.cambiarImagen("assets/ayuda.png")
+			/*game.addVisual(pantalla)*/
+			juego.eliminar()
 		}
 	}
 }
